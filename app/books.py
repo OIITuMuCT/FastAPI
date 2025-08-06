@@ -1,6 +1,7 @@
 """ Project 2 books """
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
+from typing import Optional
 
 
 app = FastAPI()
@@ -22,11 +23,22 @@ class Book:
 
 
 class BookRequest(BaseModel):
-    id: int
+    id: Optional[int] = Field(description="ID is not needed on create", default=None)
     title: str = Field(min_length=3)
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=-1, lt=6)
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "title": "A new book",
+                "author": "The author of the book",
+                "description": "A new description of a book",
+                "rating": 5
+            }
+        }
+    }
 
 
 BOOKS = [
@@ -52,9 +64,9 @@ async def create_book(book_request: BookRequest):
 
 
 def find_book_id(book: Book):
-    if len(BOOKS) > 0:
-        book.id = BOOKS[-1].id + 1
-    else:
-        book.id = 1
-
+    book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
+    # if len(BOOKS) > 0:
+    #     book.id = BOOKS[-1].id + 1
+    # else:
+    #     book.id = 1
     return book
