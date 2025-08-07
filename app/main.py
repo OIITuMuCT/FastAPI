@@ -12,6 +12,12 @@ BOOKS = [
     {"title": "Title Six", "author": "Author Two", "category": "math"},
 ]
 
+
+@app.get("/ping")
+def pong():
+    return {"ping": "pong!"}
+
+
 @app.get("/books")
 async def read_all_books():
     """ # Read books """
