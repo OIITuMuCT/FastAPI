@@ -1,9 +1,10 @@
 """todos"""
+
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, Path, HTTPException
 from starlette import status
 from models import Todos
-from database import engine, SessionLocal
+from database import SessionLocal
 from typing import Annotated
 from pydantic import BaseModel, Field
 
