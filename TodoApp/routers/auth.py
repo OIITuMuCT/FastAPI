@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime, timezone
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from ..models import Users
 from passlib.context import CryptContext
@@ -45,6 +46,21 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+templates = Jinja2Templates(directory="TodoApp/templates")
+
+### Pages ###
+
+@router.get("/login-page")
+def render_login_page(request: Request):
+    """ Render login page """
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    """ Render register page """
+    return templates.TemplateResponse("register.html", {"request": request})
+
+### Endpoints ###
 
 def authenticate_user(username: str, password: str, db):
     user = db.query(Users).filter(Users.username == username).first()
